@@ -43,12 +43,55 @@ namespace KSharp.Tests
             var t = new Tokenizer(reader);
 
             // act
-            var result1 =t.GetToken();
+            var result1 = t.GetToken();
             var result2 = t.GetToken();
 
             // assert
             Assert.AreEqual(TokenType.Identifier, result1);
             Assert.AreEqual(TokenType.Def, result2);
+        }
+
+        [TestMethod]
+        public void CanGetEndOfFile()
+        {
+            // arrange
+            var reader = new FakeSourceReader("asdf def");
+            var t = new Tokenizer(reader);
+
+            // act
+            var result1 = t.GetToken();
+            var result2 = t.GetToken();
+            var result3 = t.GetToken();
+
+            // assert
+            Assert.AreEqual(TokenType.Identifier, result1);
+            Assert.AreEqual(TokenType.Def, result2);
+            Assert.AreEqual(TokenType.Eof, result3);
+        }
+
+        [TestMethod]
+        public void CanIgnoreNewlinesAndComments()
+        {
+            // arrange
+            var reader = new FakeSourceReader(
+                "asdf     " 
+                + Environment.NewLine 
+                + Environment.NewLine
+                + "#asdfsadf"
+                + Environment.NewLine
+                + "def"
+                + Environment.NewLine);
+            var t = new Tokenizer(reader);
+
+            // act
+            var result1 = t.GetToken();
+            var result2 = t.GetToken();
+            var result3 = t.GetToken();
+
+            // assert
+            Assert.AreEqual(TokenType.Identifier, result1);
+            Assert.AreEqual(TokenType.Def, result2);
+            Assert.AreEqual(TokenType.Eof, result3);
         }
     }
 

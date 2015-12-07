@@ -26,6 +26,11 @@ namespace KSharp.Lexer
                 lastChar = _sourceReader.GetChar();
             }
 
+            if (lastChar == (int)TokenType.Eof)
+            {
+                return TokenType.Eof;
+            }
+
             if (char.IsLetter((char)lastChar))
             {
                 _identifier = Convert.ToString((char)lastChar);
@@ -60,13 +65,13 @@ namespace KSharp.Lexer
                     lastChar = _sourceReader.GetChar();
                 } while (lastChar != null && lastChar != '\n' && lastChar != '\r');
 
-                if (lastChar != null)
+                if (lastChar != -1)
                 {
                     return GetToken();
                 }
             }
 
-            return 0;
+            return TokenType.Eof;
         }
     }
 }
