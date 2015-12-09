@@ -36,6 +36,24 @@ namespace KSharp.Tests
         }
 
         [TestMethod]
+        public void CanGetNumberToken()
+        {
+            // arrange
+            var r = new FakeSourceReader("asdf 1232 asdf");
+            var t = new Tokenizer(r);
+
+            // act
+            var result1 = t.GetToken();
+            var result2 = t.GetToken();
+            var result3 = t.GetToken();
+
+            // assert
+            Assert.AreEqual(TokenType.Identifier, result1);
+            Assert.AreEqual(TokenType.Number, result2);
+            Assert.AreEqual(TokenType.Identifier, result3);
+        }
+
+        [TestMethod]
         public void CanGetTwoTokens()
         {
             // arrange

@@ -26,11 +26,6 @@ namespace KSharp.Lexer
                 lastChar = _sourceReader.GetChar();
             }
 
-            if (lastChar == (int)TokenType.Eof)
-            {
-                return TokenType.Eof;
-            }
-
             if (char.IsLetter((char)lastChar))
             {
                 _identifier = Convert.ToString((char)lastChar);
@@ -58,17 +53,36 @@ namespace KSharp.Lexer
                 return TokenType.Identifier;
             }
 
+            if(char.IsDigit((char)lastChar) || (char)lastChar == '.')
+            {
+                var number = string.Empty;
+
+                do
+                {
+                    number += (char)lastChar;
+                    lastChar = _sourceReader.GetChar();
+                }
+                while (char.IsDigit((char)lastChar) || (char)lastChar == '.');
+
+                return TokenType.Number;
+            }
+
             while (lastChar == '#')
             {
                 do
                 {
                     lastChar = _sourceReader.GetChar();
-                } while (lastChar != null && lastChar != '\n' && lastChar != '\r');
+                } while (lastChar != (int)TokenType.Eof && lastChar != '\n' && lastChar != '\r');
 
-                if (lastChar != -1)
+                if (lastChar != (int)TokenType.Eof)
                 {
                     return GetToken();
                 }
+            }
+
+            if (lastChar == (int)TokenType.Eof)
+            {
+                return TokenType.Eof;
             }
 
             return TokenType.Eof;
