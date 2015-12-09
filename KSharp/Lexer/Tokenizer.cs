@@ -17,7 +17,7 @@ namespace KSharp.Lexer
             _sourceReader = sourceReader;
         }
 
-        public TokenType GetToken()
+        public int GetToken()
         {
             int lastChar = ' ';
 
@@ -42,15 +42,15 @@ namespace KSharp.Lexer
 
                 if (_identifier == "def")
                 {
-                    return TokenType.Def;
+                    return (int)TokenType.Def;
                 }
 
                 if (_identifier == "extern")
                 {
-                    return TokenType.Extern;
+                    return (int)TokenType.Extern;
                 }
 
-                return TokenType.Identifier;
+                return (int)TokenType.Identifier;
             }
 
             if(char.IsDigit((char)lastChar) || (char)lastChar == '.')
@@ -64,7 +64,7 @@ namespace KSharp.Lexer
                 }
                 while (char.IsDigit((char)lastChar) || (char)lastChar == '.');
 
-                return TokenType.Number;
+                return (int)TokenType.Number;
             }
 
             while (lastChar == '#')
@@ -82,10 +82,12 @@ namespace KSharp.Lexer
 
             if (lastChar == (int)TokenType.Eof)
             {
-                return TokenType.Eof;
+                return (int)TokenType.Eof;
             }
 
-            return TokenType.Eof;
+            var thisChar = lastChar;
+            lastChar = _sourceReader.GetChar();
+            return thisChar;
         }
     }
 }

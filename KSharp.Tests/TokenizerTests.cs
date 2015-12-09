@@ -18,7 +18,7 @@ namespace KSharp.Tests
             var result = tokenizer.GetToken();
 
             // assert
-            Assert.AreEqual(TokenType.Identifier, result);
+            Assert.AreEqual((int)TokenType.Identifier, result);
         }
 
         [TestMethod]
@@ -32,7 +32,7 @@ namespace KSharp.Tests
             var result = tknzr.GetToken();
 
             // assert
-            Assert.AreEqual(TokenType.Def, result);
+            Assert.AreEqual((int)TokenType.Def, result);
         }
 
         [TestMethod]
@@ -48,9 +48,9 @@ namespace KSharp.Tests
             var result3 = t.GetToken();
 
             // assert
-            Assert.AreEqual(TokenType.Identifier, result1);
-            Assert.AreEqual(TokenType.Number, result2);
-            Assert.AreEqual(TokenType.Identifier, result3);
+            Assert.AreEqual((int)TokenType.Identifier, result1);
+            Assert.AreEqual((int)TokenType.Number, result2);
+            Assert.AreEqual((int)TokenType.Identifier, result3);
         }
 
         [TestMethod]
@@ -65,8 +65,8 @@ namespace KSharp.Tests
             var result2 = t.GetToken();
 
             // assert
-            Assert.AreEqual(TokenType.Identifier, result1);
-            Assert.AreEqual(TokenType.Def, result2);
+            Assert.AreEqual((int)TokenType.Identifier, result1);
+            Assert.AreEqual((int)TokenType.Def, result2);
         }
 
         [TestMethod]
@@ -82,9 +82,9 @@ namespace KSharp.Tests
             var result3 = t.GetToken();
 
             // assert
-            Assert.AreEqual(TokenType.Identifier, result1);
-            Assert.AreEqual(TokenType.Def, result2);
-            Assert.AreEqual(TokenType.Eof, result3);
+            Assert.AreEqual((int)TokenType.Identifier, result1);
+            Assert.AreEqual((int)TokenType.Def, result2);
+            Assert.AreEqual((int)TokenType.Eof, result3);
         }
 
         [TestMethod]
@@ -92,8 +92,8 @@ namespace KSharp.Tests
         {
             // arrange
             var reader = new FakeSourceReader(
-                "asdf     " 
-                + Environment.NewLine 
+                "asdf     "
+                + Environment.NewLine
                 + Environment.NewLine
                 + "#asdfsadf"
                 + Environment.NewLine
@@ -107,9 +107,23 @@ namespace KSharp.Tests
             var result3 = t.GetToken();
 
             // assert
-            Assert.AreEqual(TokenType.Identifier, result1);
-            Assert.AreEqual(TokenType.Def, result2);
-            Assert.AreEqual(TokenType.Eof, result3);
+            Assert.AreEqual((int)TokenType.Identifier, result1);
+            Assert.AreEqual((int)TokenType.Def, result2);
+            Assert.AreEqual((int)TokenType.Eof, result3);
+        }
+
+        [TestMethod]
+        public void CanHandleNonAlphaNumericToken()
+        {
+            // arrange
+            var r = new FakeSourceReader("=");
+            var t = new Tokenizer(r);
+
+            // act
+            var result = t.GetToken();
+
+            // assert
+            Assert.AreEqual((int)'=', result);
         }
     }
 
