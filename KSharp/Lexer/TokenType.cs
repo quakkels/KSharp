@@ -8,8 +8,8 @@
         Def = -2,
         Extern = -3,
 
-        // primary
         Identifier = -4,
-        Number = -5
+        Number = -5,
+        Character = -6
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface ITokenizer
     {
-        int GetToken();
+        Token GetToken();
     }
 }

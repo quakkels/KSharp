@@ -49,12 +49,21 @@
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\Tokenizer.cs" />
     <Compile Include="Lexer\TokenType.cs" />
+    <Compile Include="Parser\Ast\BinaryExpression.cs" />
+    <Compile Include="Parser\Ast\CallExpression.cs" />
+    <Compile Include="Parser\Ast\Expression.cs" />
+    <Compile Include="Parser\Ast\Function.cs" />
+    <Compile Include="Parser\Ast\NumericExpression.cs" />
+    <Compile Include="Parser\Ast\Prototype.cs" />
+    <Compile Include="Parser\Ast\VariableExpression.cs" />
+    <Compile Include="Parser\Parsr.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
