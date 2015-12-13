@@ -6,6 +6,7 @@ namespace KSharp.Lexer
     {
         private readonly ISourceReader _sourceReader;
         private string _identifier = string.Empty;
+        private int _lastChar;
 
         public Tokenizer() 
             : this(new SourceReader())
@@ -19,22 +20,20 @@ namespace KSharp.Lexer
 
         public Token GetToken()
         {
-            int lastChar = ' ';
-
-            while (char.IsWhiteSpace((char)lastChar))
+            while (char.IsWhiteSpace((char)_lastChar) || _lastChar == 0)
             {
-                lastChar = _sourceReader.GetChar();
+                _lastChar = _sourceReader.GetChar();
             }
 
-            if (char.IsLetter((char)lastChar))
+            if (char.IsLetter((char)_lastChar))
             {
-                _identifier = Convert.ToString((char)lastChar);
-                lastChar = _sourceReader.GetChar();
-                while (char.IsLetterOrDigit((char)lastChar))
+                _identifier = Convert.ToString((char)_lastChar);
+                _lastChar = _sourceReader.GetChar();
+                while (char.IsLetterOrDigit((char)_lastChar))
                 {
-                    _identifier += (char)lastChar;
-                    lastChar = _sourceReader.GetChar();
-                    if (lastChar == -1)
+                    _identifier += (char)_lastChar;
+                    _lastChar = _sourceReader.GetChar();
+                    if (_lastChar == -1)
                     {
                         break;
                     }
@@ -53,40 +52,40 @@ namespace KSharp.Lexer
                 return new Token(TokenType.Identifier, _identifier);
             }
 
-            if(char.IsDigit((char)lastChar) || (char)lastChar == '.')
+            if(char.IsDigit((char)_lastChar) || (char)_lastChar == '.')
             {
                 var number = string.Empty;
 
                 do
                 {
-                    number += (char)lastChar;
-                    lastChar = _sourceReader.GetChar();
+                    number += (char)_lastChar;
+                    _lastChar = _sourceReader.GetChar();
                 }
-                while (char.IsDigit((char)lastChar) || (char)lastChar == '.');
+                while (char.IsDigit((char)_lastChar) || (char)_lastChar == '.');
 
                 return new Token(TokenType.Number, number);
             }
 
-            while (lastChar == '#')
+            while (_lastChar == '#')
             {
                 do
                 {
-                    lastChar = _sourceReader.GetChar();
-                } while (lastChar != (int)TokenType.Eof && lastChar != '\n' && lastChar != '\r');
+                    _lastChar = _sourceReader.GetChar();
+                } while (_lastChar != (int)TokenType.Eof && _lastChar != '\n' && _lastChar != '\r');
 
-                if (lastChar != (int)TokenType.Eof)
+                if (_lastChar != (int)TokenType.Eof)
                 {
                     return GetToken();
                 }
             }
 
-            if (lastChar == (int)TokenType.Eof)
+            if (_lastChar == (int)TokenType.Eof)
             {
                 return new Token(TokenType.Eof);
             }
 
-            var thisChar = lastChar;
-            lastChar = _sourceReader.GetChar();
+            var thisChar = _lastChar;
+            _lastChar = _sourceReader.GetChar();
             return new Token(TokenType.Character, thisChar);
         }
     }

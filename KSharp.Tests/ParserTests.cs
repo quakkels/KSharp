@@ -1,5 +1,6 @@
 ﻿using KSharp.Lexer;
 using KSharp.Parser;
+using KSharp.Parser.Ast;
 using KSharp.Tests.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -65,6 +66,30 @@ namespace KSharp.Tests
             var result = _p.GetCurrentTokenPrecedence();
 
             Assert.AreEqual(-1, result);
+        }
+
+        [TestMethod]
+        public void ParseIdentitierExpressionReturnsVariable()
+        {
+            SetSource("asdf");
+            _p.GetNextToken();
+
+            var result = _p.ParseIdentifier();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(VariableExpression));
+        }
+
+        [TestMethod]
+        public void ParseIdentitierExpressionReturnsCallExpression()
+        {
+            SetSource("asdf()");
+            _p.GetNextToken();
+
+            var result = _p.ParseIdentifier();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(CallExpression));
         }
 
         private void SetSource(string source)

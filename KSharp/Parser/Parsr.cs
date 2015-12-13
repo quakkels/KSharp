@@ -50,12 +50,11 @@ namespace KSharp.Parser
                 return new VariableExpression(name);
             }
 
-            GetHashCode(); // munch the open paren
+            GetNextToken(); // munch the open paren
 
             var args = new List<Expression>();
             if (!CurrentToken.IsChar(')'))
             {
-
                 while (true)
                 {
                     args.Add(ParseExpression());
@@ -87,7 +86,7 @@ namespace KSharp.Parser
         {
             GetNextToken(); // munch the first '('
 
-            var contents = ParseIdentifier();
+            var contents = ParseExpression(); //todo: check that this gets a bunch of tokens.
 
             if (!CurrentToken.IsChar(')'))
             {
