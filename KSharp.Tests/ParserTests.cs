@@ -3,6 +3,7 @@ using KSharp.Parser;
 using KSharp.Tests.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace KSharp.Tests
 {
@@ -11,6 +12,7 @@ namespace KSharp.Tests
     {
         private ISourceReader _r;
         private ITokenizer _t;
+        private Dictionary<char, int> _bo;
         private Parsr _p;
 
         [TestInitialize]
@@ -18,7 +20,13 @@ namespace KSharp.Tests
         {
             _r = new FakeSourceReader(string.Empty);
             _t = new Tokenizer(_r);
-            _p = new Parsr(_t);
+            _bo = new Dictionary<char, int> {
+                { '<', 10 },
+                { '+', 20 },
+                { '-', 30 },
+                { '*', 40 }
+            };
+            _p = new Parsr(_t, _bo);
         }
 
         [TestMethod]
@@ -46,6 +54,17 @@ namespace KSharp.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(123.3, result.Value);
             Assert.AreEqual(TokenType.Eof, _p.CurrentToken.Type);
+        }
+
+        [TestMethod]
+        public void NonOperatorReturnsLowPrecedence()
+        {
+            SetSource("$");
+
+            _p.GetNextToken();
+            var result = _p.GetCurrentTokenPrecedence();
+
+            Assert.AreEqual(-1, result);
         }
 
         private void SetSource(string source)
