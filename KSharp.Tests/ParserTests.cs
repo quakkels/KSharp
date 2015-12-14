@@ -110,6 +110,17 @@ namespace KSharp.Tests
 
         }
 
+        [TestMethod]
+        public void ParseNumber()
+        {
+            SetSource("213.1");
+            _p.GetNextToken();
+
+            NumericExpression result = _p.ParseNumber();
+
+            Assert.AreEqual(213.1, result.Value);
+        }
+
         private void SetSource(string source)
         {
             ((FakeSourceReader)_r).Source = source;
