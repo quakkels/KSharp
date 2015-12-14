@@ -1,24 +1,33 @@
-﻿namespace KSharp.Lexer
+﻿using System;
+
+namespace KSharp.Lexer
 {
-    public static class Token
+    public class Token
     {
-        public static string Identifier;
-        public static double NumberValue;
+        public TokenType Type { get; private set; }
+        public object Value { get; private set; }
 
-        public static int GetToken()
+        public Token(TokenType type, object value)
         {
-            var lastChar = ' ';
-
-            while (lastChar == ' ')
-            {
-                lastChar = GetChar();
-            }
-            return 0;
+            Type = type;
+            Value = value;
         }
 
-        public static char GetChar()
+        public Token(TokenType type)
         {
-            return 's';
+            Type = type;
+            Value = type;
+        }
+
+        public bool IsChar(char character)
+        {
+            if (TokenType.Character == Type
+                && Convert.ToChar(Value) == character)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
