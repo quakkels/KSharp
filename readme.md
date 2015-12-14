@@ -1,4 +1,4 @@
-# K\#
+# K&#35;
 
 This is just a toy language. The goal is not to create a PL that could eventually be used tp solve business problems. Rather, I just want to have fun writing a silly little compiler. And, hopefully grow from the experience.
 
