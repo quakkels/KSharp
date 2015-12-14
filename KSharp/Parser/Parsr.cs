@@ -67,10 +67,12 @@ namespace KSharp.Parser
                     {
                         throw new Exception("Expected \" or ) in argument list.");   
                     }
+
+                    GetNextToken();
                 }
             }
 
-            GetNextToken(); // much )
+            GetNextToken(); // munch close paren
 
             return new CallExpression(name, args);
         }

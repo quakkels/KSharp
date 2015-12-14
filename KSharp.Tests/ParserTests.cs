@@ -86,10 +86,28 @@ namespace KSharp.Tests
             SetSource("asdf()");
             _p.GetNextToken();
 
-            var result = _p.ParseIdentifier();
+            var result = _p.ParseIdentifier() as CallExpression;
 
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(CallExpression));
+            Assert.AreEqual("asdf", result.Callee);
+            Assert.AreEqual(0, result.Arguments.Count);
+        }
+
+        [TestMethod]
+        public void ParseIdentifierExpressionWithArguments()
+        {
+            SetSource("asdf(one, two)");
+            _p.GetNextToken();
+
+            var result = _p.ParseIdentifier() as CallExpression;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("asdf", result.Callee);
+            Assert.AreEqual(2, result.Arguments.Count);
+            Assert.AreEqual("one", ((VariableExpression)(result.Arguments[0])).Name);
+            Assert.AreEqual("two", ((VariableExpression)(result.Arguments[1])).Name);
+
         }
 
         private void SetSource(string source)

@@ -130,7 +130,7 @@ namespace KSharp.Tests
         [TestMethod]
         public void CanTokenizeWithWhitespacePresent()
         {
-            var r = new FakeSourceReader("1 a ( ) - =");
+            var r = new FakeSourceReader("12 asdf ( ) - =");
             var t = new Tokenizer(r);
 
             var number = t.GetToken();
@@ -141,18 +141,19 @@ namespace KSharp.Tests
             var equals = t.GetToken();
             var eof = t.GetToken();
 
-            Assert.AreEqual(1, Convert.ToInt32(number.Value));
-            Assert.AreEqual("a", id.Value);
+            Assert.AreEqual(12, Convert.ToInt32(number.Value));
+            Assert.AreEqual("asdf", id.Value);
             Assert.AreEqual('(', Convert.ToChar(openParen.Value));
             Assert.AreEqual(')', Convert.ToChar(closeParen.Value));
             Assert.AreEqual('-', Convert.ToChar(minus.Value));
             Assert.AreEqual('=', Convert.ToChar(equals.Value));
+            Assert.AreEqual(TokenType.Eof, eof.Type);
         }
 
         [TestMethod]
         public void CanTokenizeWithoutWhitespacePresent()
         {
-            var r = new FakeSourceReader("1a()-=");
+            var r = new FakeSourceReader("12asdf()-=");
             var t = new Tokenizer(r);
 
             var number = t.GetToken();
@@ -163,12 +164,13 @@ namespace KSharp.Tests
             var equals = t.GetToken();
             var eof = t.GetToken();
 
-            Assert.AreEqual(1, Convert.ToInt32(number.Value));
-            Assert.AreEqual("a", id.Value);
+            Assert.AreEqual(12, Convert.ToInt32(number.Value));
+            Assert.AreEqual("asdf", id.Value);
             Assert.AreEqual('(', Convert.ToChar(openParen.Value));
             Assert.AreEqual(')', Convert.ToChar(closeParen.Value));
             Assert.AreEqual('-', Convert.ToChar(minus.Value));
             Assert.AreEqual('=', Convert.ToChar(equals.Value));
+            Assert.AreEqual(TokenType.Eof, eof.Type);
         }
     }
 }
