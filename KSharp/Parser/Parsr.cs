@@ -47,7 +47,7 @@ namespace KSharp.Parser
 
             if (!CurrentToken.IsChar('('))
             {
-                return new VariableExpression(name);
+                return new IdentifierExpression(name);
             }
 
             GetNextToken(); // munch the open paren
@@ -88,7 +88,7 @@ namespace KSharp.Parser
         {
             GetNextToken(); // munch the first '('
 
-            var contents = ParseExpression(); //todo: check that this gets a bunch of tokens.
+            var contents = ParseExpression();
 
             if (!CurrentToken.IsChar(')'))
             {
@@ -110,8 +110,7 @@ namespace KSharp.Parser
                 return ParseNumber();
             }
 
-            if (CurrentToken.Type == TokenType.Character
-                && CurrentToken.Value.Equals(')'))
+            if (CurrentToken.IsChar('('))
             {
                 return ParseParen();
             }
@@ -149,6 +148,49 @@ namespace KSharp.Parser
 
                 left = new BinaryExpression(binop, left, right);
             }
+        }
+
+        public Prototype ParsePrototype()
+        {
+            if (CurrentToken.Type != TokenType.Identifier)
+            {
+                throw new Exception("Expected function name in prototype.");
+            }
+
+            var functionName = (string)CurrentToken.Value;
+            GetNextToken();
+
+            if (!CurrentToken.IsChar('('))
+            {
+                throw new Exception("Expected ( in prototype.");
+            }
+
+            var argumentNames = new List<string>();
+            while (GetNextToken().Type == TokenType.Identifier)
+            {
+                argumentNames.Add((string)CurrentToken.Value);
+
+            }
+
+            if (!CurrentToken.IsChar(')'))
+            {
+                throw new Exception("Expected ) in prototype.");
+            }
+
+            // success. eat the ')'
+            GetNextToken();
+
+            return new Prototype(functionName, argumentNames);
+        }
+
+        public Function ParseDefinition()
+        {
+            GetNextToken(); // eat the def
+            var proto = ParsePrototype();
+            var body = ParseExpression();
+
+            var function = new Function(proto, body);
+            return function;
         }
     }
 }
