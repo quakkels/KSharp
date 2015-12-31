@@ -55,7 +55,7 @@
     <Compile Include="Parser\Ast\Function.cs" />
     <Compile Include="Parser\Ast\NumericExpression.cs" />
     <Compile Include="Parser\Ast\Prototype.cs" />
-    <Compile Include="Parser\Ast\VariableExpression.cs" />
+    <Compile Include="Parser\Ast\IdentifierExpression.cs" />
     <Compile Include="Parser\Parsr.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

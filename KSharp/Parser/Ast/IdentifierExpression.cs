@@ -1,10 +1,10 @@
 ﻿namespace KSharp.Parser.Ast
 {
-    public class VariableExpression : Expression
+    public class IdentifierExpression : Expression
     {
         public string Name { get; set; }
 
-        public VariableExpression(string name)
+        public IdentifierExpression(string name)
         {
             Name = name;
         }

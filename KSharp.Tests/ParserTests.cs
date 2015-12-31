@@ -77,7 +77,7 @@ namespace KSharp.Tests
             var result = _p.ParseIdentifier();
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(VariableExpression));
+            Assert.IsInstanceOfType(result, typeof(IdentifierExpression));
         }
 
         [TestMethod]
@@ -105,8 +105,8 @@ namespace KSharp.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual("asdf", result.Callee);
             Assert.AreEqual(2, result.Arguments.Count);
-            Assert.AreEqual("one", ((VariableExpression)(result.Arguments[0])).Name);
-            Assert.AreEqual("two", ((VariableExpression)(result.Arguments[1])).Name);
+            Assert.AreEqual("one", ((IdentifierExpression)(result.Arguments[0])).Name);
+            Assert.AreEqual("two", ((IdentifierExpression)(result.Arguments[1])).Name);
 
         }
 
@@ -120,6 +120,90 @@ namespace KSharp.Tests
 
             Assert.AreEqual(213.1, result.Value);
         }
+
+        [TestMethod]
+        public void ParseParen()
+        {
+            SetSource("(123)");
+            _p.GetNextToken();
+
+            var result = _p.ParseParen();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(123, ((NumericExpression)result).Value);
+        }
+
+        [TestMethod]
+        public void ParsePrimary_Identifier()
+        {
+            SetSource("abc123");
+            _p.GetNextToken();
+
+            var result = _p.ParsePrimary();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("abc123", ((IdentifierExpression)result).Name);
+        }
+
+        [TestMethod]
+        public void ParsePrimary_Number()
+        {
+            SetSource("123");
+            _p.GetNextToken();
+
+            var result = _p.ParsePrimary();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(123, ((NumericExpression)result).Value);
+        }
+
+        [TestMethod]
+        public void ParsePrimary_Paren()
+        {
+            SetSource("(a)");
+            _p.GetNextToken();
+
+            var result = _p.ParsePrimary();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("a", ((IdentifierExpression)result).Name);
+        }
+
+        [TestMethod]
+        public void ParsePrototype()
+        {
+            // arrange
+            SetSource("FName(arg1 arg2)");
+            _p.GetNextToken();
+
+            // act
+            Prototype result = _p.ParsePrototype();
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("FName", result.Name);
+            Assert.AreEqual(2, result.Arguments.Count);
+            Assert.AreEqual("arg1", result.Arguments[0]);
+            Assert.AreEqual("arg2", result.Arguments[1]);
+        }
+
+        [TestMethod]
+        public void ParseExpression()
+        {
+            SetSource("123 + 321");
+            _p.GetNextToken();
+
+            var result = _p.ParseExpression();
+
+            Assert.IsNotNull(result);
+            var left = ((BinaryExpression)result).Left as NumericExpression;
+            var op = ((BinaryExpression)result).Operator;
+            var right = ((BinaryExpression)result).Right as NumericExpression;
+            Assert.AreEqual(123, left.Value);
+            Assert.AreEqual('+', op);
+            Assert.AreEqual(321, right.Value);
+        }
+
 
         private void SetSource(string source)
         {
