@@ -192,5 +192,17 @@ namespace KSharp.Parser
             var function = new Function(proto, body);
             return function;
         }
+
+        public Prototype ParseExtern()
+        {
+            GetNextToken(); // eat 'extern'
+            return ParsePrototype();
+        }
+
+        public Function ParseTopLevelExpression()
+        {
+            var proto = new Prototype(string.Empty, new List<string>());
+            return new Function(proto, ParseExpression());
+        }
     }
 }
