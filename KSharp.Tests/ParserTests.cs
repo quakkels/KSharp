@@ -204,7 +204,73 @@ namespace KSharp.Tests
             Assert.AreEqual(321, right.Value);
         }
 
+        [TestMethod]
+        public void ParseDefinition_WithAnExpression()
+        {
+            SetSource("def FName (arg1 arg2) arg1 + arg2");
+            _p.GetNextToken();
 
+            var result = _p.ParseDefinition();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("FName", result.Proto.Name);
+            Assert.AreEqual(2, result.Proto.Arguments.Count);
+            Assert.AreEqual("arg2", result.Proto.Arguments[1]);
+
+            var binExp = result.Body as BinaryExpression;
+            Assert.IsNotNull(binExp);
+            Assert.AreEqual("arg1", ((IdentifierExpression)binExp.Left).Name);
+            Assert.AreEqual('+', binExp.Operator);
+            Assert.AreEqual("arg2", ((IdentifierExpression)binExp.Right).Name);
+        }
+
+        [TestMethod]
+        public void ParseDefinition_WithCallExpression()
+        {
+            SetSource("def FName (arg1 arg2) FName2()");
+            _p.GetNextToken();
+
+            var result = _p.ParseDefinition();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("FName", result.Proto.Name);
+            Assert.AreEqual(2, result.Proto.Arguments.Count);
+            Assert.AreEqual("arg2", result.Proto.Arguments[1]);
+
+            var bodyExp = result.Body as CallExpression;
+            Assert.IsNotNull(bodyExp);
+            Assert.AreEqual("FName2", bodyExp.Callee);
+            Assert.AreEqual(0, bodyExp.Arguments.Count);
+        }
+
+        [TestMethod]
+        public void ParseExtern()
+        {
+            SetSource("extern FName()");
+            _p.GetNextToken();
+
+            var result = _p.ParseExtern();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Arguments.Count);
+            Assert.AreEqual("FName", result.Name);
+        }
+
+        [TestMethod]
+        public void ParseTopLevelExpression()
+        {
+            SetSource("1 - 1");
+            _p.GetNextToken();
+
+            var result = _p.ParseTopLevelExpression();
+
+            Assert.IsNotNull(result);
+            var left = ((BinaryExpression)(result.Body)).Left;
+            var right = ((BinaryExpression)(result.Body)).Right;
+            Assert.AreEqual(1, ((NumericExpression)left).Value);
+            Assert.AreEqual('-', ((BinaryExpression)result.Body).Operator);
+            Assert.AreEqual(1, ((NumericExpression)right).Value);
+        }
         private void SetSource(string source)
         {
             ((FakeSourceReader)_r).Source = source;
