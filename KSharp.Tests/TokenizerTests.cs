@@ -27,7 +27,7 @@ namespace KSharp.Tests
         public void CanGetKeywordToken()
         {
             // arrange
-            var reader = new FakeSourceReader("def");
+            var reader = new FakeSourceReader(Keywords.DEF);
             var tknzr = new Tokenizer(reader);
 
             // act
@@ -58,7 +58,7 @@ namespace KSharp.Tests
         public void CanGetTwoTokens()
         {
             // arrange
-            var reader = new FakeSourceReader("asdf def");
+            var reader = new FakeSourceReader("asdf " + Keywords.DEF);
             var t = new Tokenizer(reader);
 
             // act
@@ -97,7 +97,7 @@ namespace KSharp.Tests
                 + Environment.NewLine
                 + "#asdfsadf"
                 + Environment.NewLine
-                + "def"
+                + Keywords.DEF
                 + Environment.NewLine);
             var t = new Tokenizer(reader);
 
