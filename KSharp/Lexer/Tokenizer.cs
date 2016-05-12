@@ -39,12 +39,12 @@ namespace KSharp.Lexer
                     }
                 }
 
-                if (_identifier == "def")
+                if (_identifier.IsDef())
                 {
                     return new Token(TokenType.Def);
                 }
 
-                if (_identifier == "extern")
+                if (_identifier.IsExtern())
                 {
                     return new Token(TokenType.Extern);
                 }

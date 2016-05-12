@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Lexer\ISourceReader.cs" />
     <Compile Include="Lexer\ITokenizer.cs" />
+    <Compile Include="Lexer\Keywords.cs" />
     <Compile Include="Lexer\SourceReader.cs" />
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\Tokenizer.cs" />
