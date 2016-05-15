@@ -17,6 +17,9 @@ namespace KSharp
             var driver = new Driver(parser);
 
             driver.MainLoop();
+
+            System.Console.WriteLine("Exiting... Press any key.");
+            System.Console.ReadKey();
         }
     }
 }
